@@ -5,7 +5,7 @@ create table role (
     id int primary key auto_increment,
     role_name varchar(50)
 );
-
+ 
 create table user (
     id int primary key auto_increment,
     username varchar(100) not null,
