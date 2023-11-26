@@ -1,5 +1,6 @@
 <?php
-include "../DB-conn.php";
+include "../../config/DB-conn.php";
+
 $id = $_GET["id"];
 
 // First, delete the corresponding records from the role_user table
@@ -11,7 +12,7 @@ $sqlUser = "DELETE FROM user WHERE id = $id";
 $resultUser = mysqli_query($conn, $sqlUser);
 
 if ($resultRoleUser && $resultUser) {
-    header("Location: ../index.php?msg=Data deleted successfully");
+    header("Location: ../../index.php?msg=Data deleted successfully");
 } else {
     echo "Failed: " . mysqli_error($conn);
 }

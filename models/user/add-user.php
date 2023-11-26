@@ -1,5 +1,5 @@
 <?php
-include "../DB-conn.php";
+include "../../config/DB-conn.php";
 
 if (isset($_POST["submit"])) {
     $username = $_POST['username'];
@@ -29,7 +29,7 @@ if (isset($_POST["submit"])) {
             // Close the database connection
 
             // Redirect to success page or show success message
-            header("Location: ../index.php?msg=User created successfully");
+            header("Location: ../../index.php?msg=User created successfully");
             exit();
         } else {
             echo "Error inserting data into 'role_user' table: " . mysqli_error($conn);
@@ -124,7 +124,7 @@ $resultRoles = $conn->query($sqlRoles);
 
     <div class="button-container">
         <button type="submit" class="btn btn-success" name="submit" style="background-color: #30B7FF; border: 2px solid black">Save</button>
-        <a href="../index.php" class="btn btn-danger" style="background-color: #30B7FF;  border: 2px solid black">Cancel</a>
+        <a href="../../index.php" class="btn btn-danger" style="background-color: #30B7FF;  border: 2px solid black">Cancel</a>
     </div>
     <br>
     <br>

@@ -42,7 +42,7 @@
                 </li>
 
                 <li>
-                    <a href="project.php">
+                    <a href="views/project.php">
                         <span class="icon">
                         <ion-icon name="receipt-outline"></ion-icon>
                         </span>
@@ -50,7 +50,7 @@
                     </a>
                 </li>
 
-                <li>
+                <!-- <li>
                     <a href="delivery.php">
                         <span class="icon">
                         <ion-icon name="location-outline"></ion-icon>
@@ -95,7 +95,7 @@
                         </span>
                         <span class="title">Sign Out</span>
                     </a>
-                </li>
+                </li> -->
             </ul>
         </div>
 
@@ -234,7 +234,7 @@
     </div>';
     }
     ?>
-    <a href="user/add-user.php" class="btn btn-dark mb-3">Add A New User</a>
+    <a href="models/user/add-user.php" class="btn btn-dark mb-3">Add A New User</a>
 
     <table class="table table-hover text-center">
     <thead class="table-dark">
@@ -265,8 +265,8 @@
             <td><?php echo $row["email"] ?></td>
             <td><?php echo $row["role"] ?></td>
             <td>
-                <a href="user/update-user.php?id=<?php echo $row["user_id"] ?>" class="link-dark"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
-                <a href="user/delete-user.php?id=<?php echo $row["user_id"] ?>" class="link-dark"><i class="fa-solid fa-trash fs-5"></i></a>
+                <a href="models/user/update-user.php?id=<?php echo $row["user_id"] ?>" class="link-dark"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
+                <a href="models/user/delete-user.php?id=<?php echo $row["user_id"] ?>" class="link-dark"><i class="fa-solid fa-trash fs-5"></i></a>
             </td>
         </tr>
     <?php

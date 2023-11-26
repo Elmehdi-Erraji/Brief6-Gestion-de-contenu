@@ -1,5 +1,5 @@
 <?php
-include "../DB-conn.php";
+include "../../config/DB-conn.php";
 
 // Initialize $id to prevent "Undefined variable" warning
 $id = null;
@@ -24,7 +24,7 @@ if (isset($_GET['id'])) {
         $updateResult = mysqli_query($conn, $updateSQL);
 
         if ($updateResult) {
-            header("Location: ../project.php?msg=Project updated successfully");
+            header("Location: ../../views/project.php?msg=Project updated successfully");
             exit();
         } else {
             echo "Error updating project: " . mysqli_error($conn);

@@ -1,5 +1,5 @@
 <?php
-  include "DB-conn.php";
+  include "../config/DB-conn.php";
 ?>
 
 
@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
     <!-- ======= Styles ====== -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
     <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
    <!-- Font Awesome -->
@@ -33,7 +33,7 @@
                 </li>
 
                 <li>
-                    <a href="index.php">
+                    <a href="../index.php">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
@@ -50,7 +50,7 @@
                     </a>
                 </li>
 
-                <li>
+                <!-- <li>
                     <a href="delivery.php">
                         <span class="icon">
                         <ion-icon name="location-outline"></ion-icon>
@@ -95,7 +95,7 @@
                         </span>
                         <span class="title">Sign Out</span>
                     </a>
-                </li>
+                </li> -->
             </ul>
         </div>
 
@@ -122,7 +122,7 @@
     </div>';
     }
     ?>
-    <a href="project/add-project.php" class="btn btn-dark mb-3">Add A New Project</a>
+    <a href="../models/project/add-project.php" class="btn btn-dark mb-3">Add A New Project</a>
 
     <table class="table table-hover text-center">
         <thead class="table-dark">
@@ -157,8 +157,8 @@
                 <td><?php echo $row["status"] ?></td>
                 <td><?php echo $row["username"] ?></td>
                 <td>
-                    <a href="project/update-project.php?id=<?php echo $row["id"] ?>" class="link-dark"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
-                    <a href="project/delete-project.php?id=<?php echo $row["id"] ?>" class="link-dark"><i class="fa-solid fa-trash fs-5"></i></a>
+                    <a href="../models/project/update-project.php?id=<?php echo $row["id"] ?>" class="link-dark"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
+                    <a href="../models/project/delete-project.php?id=<?php echo $row["id"] ?>" class="link-dark"><i class="fa-solid fa-trash fs-5"></i></a>
                 </td>
             </tr>
         <?php
@@ -175,11 +175,11 @@
             <!-- ================= New Customers ================ -->
 
         </div>
-    </div>
+    </div>  
     </div>
 
     <!-- =========== Scripts =========  -->
-    <script src="assets/js/main.js"></script>
+    <script src="../assets/js/main.js"></script>
 
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

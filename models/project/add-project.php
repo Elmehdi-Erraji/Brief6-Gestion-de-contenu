@@ -1,5 +1,5 @@
 <?php
-include "../DB-conn.php";
+include "../../config/DB-conn.php";
 
 if (isset($_POST["submit"])) {
     $project_name = $_POST['project_name'];
@@ -19,7 +19,7 @@ if (isset($_POST["submit"])) {
         mysqli_close($conn);
 
         // Redirect to success page or show success message
-        header("Location: ../index.php?msg=Project added successfully");
+        header("Location: ../../index.php?msg=Project added successfully");
         exit();
     } else {
         echo "Error inserting data into 'project' table: " . mysqli_error($conn);
@@ -115,7 +115,7 @@ $resultUsers = mysqli_query($conn, $sqlUsers);
 
     <div class="button-container">
         <button type="submit" class="btn btn-success" name="submit" style="background-color: #30B7FF; border: 2px solid black">Save</button>
-        <a href="../index.php" class="btn btn-danger" style="background-color: #30B7FF; border: 2px solid black">Cancel</a>
+        <a href="../../index.php" class="btn btn-danger" style="background-color: #30B7FF; border: 2px solid black">Cancel</a>
     </div>
     <br>
     <br>
