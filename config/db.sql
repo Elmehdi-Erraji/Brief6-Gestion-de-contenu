@@ -23,12 +23,14 @@ create table role_user(
 );
 
 create table project (
-    id int PRIMARY key auto_increment,
-    project_name VARCHAR(100),
-    client_name VARCHAR(100),
-    start_date date ,
-    deadline date ,
-    statu varchar(50)
+  id int(11) PRIMARY KEY,
+  project_name varchar(100) NOT NULL,
+  description text ,
+  start_date date ,
+  deadline date ,
+  status varchar(50) ,
+  user_id int(11),
+  FOREIGN key user_id REFERENCES user(id)
 );
 
 create table team (
@@ -39,3 +41,22 @@ create table team (
     FOREIGN key (project_id) REFERENCES project(id),
     FOREIGN key (user_id) REFERENCES user(id)
 );
+
+
+
+
+
+INSERT INTO role (id, 'role_name') VALUES
+(13, 'Admin'),
+(14, 'Manager'),
+(15, 'Employee');
+
+
+INSERT INTO role_user (role_id, user_id) VALUES
+(13, 28),
+(15, 7);
+
+
+INSERT INTO user (id, 'username', 'email', 'Password') VALUES
+(7, 'JohnDoe', 'john@example.com', 'password123'),
+(28, 'said ', 'said@gmail.com', '123');
