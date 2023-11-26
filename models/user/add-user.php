@@ -2,8 +2,8 @@
 include "../../config/DB-conn.php";
 
 if (isset($_POST["submit"])) {
-    $username = $_POST['username'];
-    $email = $_POST['email'];
+    $username = htmlspecialchars($_POST['username']);
+    $email = htmlspecialchars($_POST['email']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
     $role_id = $_POST['role'];
@@ -14,19 +14,42 @@ if (isset($_POST["submit"])) {
         exit(); // Stop execution if passwords don't match
     }
 
-    // Insert user data into the 'user' table
-    $sqlInsertUser = "INSERT INTO user (username, email, Password) VALUES ('$username', '$email', '$password')";
-    $resultInsertUser = mysqli_query($conn, $sqlInsertUser);
+    // Hash the password
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+    // Prepare SQL statement to insert user data using prepared statements
+    $sqlInsertUser = "INSERT INTO user (username, email, Password) VALUES (?, ?, ?)";
+    $stmtInsertUser = mysqli_prepare($conn, $sqlInsertUser);
+
+    // Check for errors in preparing the statement
+    if (!$stmtInsertUser) {
+        die('Error preparing statement: ' . mysqli_error($conn));
+    }
+
+    // Bind parameters and execute prepared statement
+    mysqli_stmt_bind_param($stmtInsertUser, "sss", $username, $email, $hashed_password);
+    $resultInsertUser = mysqli_stmt_execute($stmtInsertUser);
 
     if ($resultInsertUser) {
         $user_id = mysqli_insert_id($conn);
 
-        // Link the user with a role in the 'role_user' table
-        $sqlInsertRoleUser = "INSERT INTO role_user (role_id, user_id) VALUES ($role_id, $user_id)";
-        $resultInsertRoleUser = mysqli_query($conn, $sqlInsertRoleUser);
+        // Prepare SQL statement to link the user with a role using prepared statements
+        $sqlInsertRoleUser = "INSERT INTO role_user (role_id, user_id) VALUES (?, ?)";
+        $stmtInsertRoleUser = mysqli_prepare($conn, $sqlInsertRoleUser);
+
+        // Check for errors in preparing the statement
+        if (!$stmtInsertRoleUser) {
+            die('Error preparing statement: ' . mysqli_error($conn));
+        }
+
+        // Bind parameters and execute prepared statement
+        mysqli_stmt_bind_param($stmtInsertRoleUser, "ii", $role_id, $user_id);
+        $resultInsertRoleUser = mysqli_stmt_execute($stmtInsertRoleUser);
 
         if ($resultInsertRoleUser) {
-            // Close the database connection
+            // Close prepared statements
+            mysqli_stmt_close($stmtInsertUser);
+            mysqli_stmt_close($stmtInsertRoleUser);
 
             // Redirect to success page or show success message
             header("Location: ../../index.php?msg=User created successfully");
@@ -39,11 +62,12 @@ if (isset($_POST["submit"])) {
     }
 }
 
+// Fetch roles data to populate the dropdown
 $sqlRoles = "SELECT * FROM role";
 $resultRoles = $conn->query($sqlRoles);
 
-// Fetch roles data to populate the dropdown
 ?>
+
 
 
 

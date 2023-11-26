@@ -50,52 +50,6 @@
                     </a>
                 </li>
 
-                <!-- <li>
-                    <a href="delivery.php">
-                        <span class="icon">
-                        <ion-icon name="location-outline"></ion-icon>
-                        </span>
-                        <span class="title">Shipping Agents</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="team.php">
-                        <span class="icon">
-                            <ion-icon name="help-outline"></ion-icon>
-                        </span>
-                        <span class="title">Chefs</span>
-                    </a>
-                </li>
-
-
-                <li>
-                    <a href="Order.php">
-                        <span class="icon">
-                            
-                            <ion-icon name="receipt-outline"></ion-icon>
-                        </span>
-                        <span class="title">Orders</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="index">
-                        <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
-                        </span>
-                        <span class="title">Settings</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="login.php">
-                        <span class="icon">
-                            <ion-icon name="log-out-outline"></ion-icon>
-                        </span>
-                        <span class="title">Sign Out</span>
-                    </a>
-                </li> -->
             </ul>
         </div>
 

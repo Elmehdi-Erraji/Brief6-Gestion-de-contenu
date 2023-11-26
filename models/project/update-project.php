@@ -10,20 +10,33 @@ if (isset($_GET['id'])) {
 
     // Check if the form is submitted
     if (isset($_POST["submit"])) {
-        $project_name = $_POST['project_name'];
-        $description = $_POST['description'];
-        $start_date = $_POST['start_date'];
-        $deadline = $_POST['deadline'];
-        $status = $_POST['status'];
-        $user_id = $_POST['user_id'];
+        $project_name = htmlspecialchars($_POST['project_name']);
+        $description = htmlspecialchars($_POST['description']);
+        $start_date = htmlspecialchars($_POST['start_date']);
+        $deadline = htmlspecialchars($_POST['deadline']);
+        $status = htmlspecialchars($_POST['status']);
+        $user_id = htmlspecialchars($_POST['user_id']);
 
-        // Update project information in the database
+        // Prepare SQL statement to update project information using prepared statements
         $updateSQL = "UPDATE project 
-                      SET project_name='$project_name', description='$description', start_date='$start_date', deadline='$deadline', status='$status', user_id='$user_id'
-                      WHERE id = $id";
-        $updateResult = mysqli_query($conn, $updateSQL);
+                      SET project_name=?, description=?, start_date=?, deadline=?, status=?, user_id=?
+                      WHERE id = ?";
+        $stmtUpdateProject = mysqli_prepare($conn, $updateSQL);
+
+        // Check for errors in preparing the statement
+        if (!$stmtUpdateProject) {
+            die('Error preparing statement: ' . mysqli_error($conn));
+        }
+
+        // Bind parameters and execute prepared statement
+        mysqli_stmt_bind_param($stmtUpdateProject, "sssssi", $project_name, $description, $start_date, $deadline, $status, $user_id, $id);
+        $updateResult = mysqli_stmt_execute($stmtUpdateProject);
 
         if ($updateResult) {
+            // Close prepared statement
+            mysqli_stmt_close($stmtUpdateProject);
+            
+            // Redirect to success page or show success message
             header("Location: ../../views/project.php?msg=Project updated successfully");
             exit();
         } else {
@@ -34,6 +47,7 @@ if (isset($_GET['id'])) {
     echo "Project ID is not provided!";
 }
 ?>
+
 
 
 

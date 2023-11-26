@@ -1,19 +1,50 @@
 <?php
 include "../../config/DB-conn.php";
 
-$id = $_GET["id"];
+// Check if the 'id' parameter is set in the URL
+if (isset($_GET["id"])) {
+    $id = htmlspecialchars($_GET["id"]);
 
-// First, delete the corresponding records from the role_user table
-$sqlRoleUser = "DELETE FROM role_user WHERE user_id = $id";
-$resultRoleUser = mysqli_query($conn, $sqlRoleUser);
+    // Prepare SQL statement to delete corresponding records from role_user table using prepared statements
+    $sqlRoleUser = "DELETE FROM role_user WHERE user_id = ?";
+    $stmtRoleUser = mysqli_prepare($conn, $sqlRoleUser);
 
-// Then, delete the user from the user table
-$sqlUser = "DELETE FROM user WHERE id = $id";
-$resultUser = mysqli_query($conn, $sqlUser);
+    // Check for errors in preparing the statement
+    if (!$stmtRoleUser) {
+        die('Error preparing statement: ' . mysqli_error($conn));
+    }
 
-if ($resultRoleUser && $resultUser) {
-    header("Location: ../../index.php?msg=Data deleted successfully");
+    // Bind parameter and execute prepared statement
+    mysqli_stmt_bind_param($stmtRoleUser, "i", $id);
+    $resultRoleUser = mysqli_stmt_execute($stmtRoleUser);
+
+    // Close prepared statement
+    mysqli_stmt_close($stmtRoleUser);
+
+    // Prepare SQL statement to delete user from user table using prepared statements
+    $sqlUser = "DELETE FROM user WHERE id = ?";
+    $stmtUser = mysqli_prepare($conn, $sqlUser);
+
+    // Check for errors in preparing the statement
+    if (!$stmtUser) {
+        die('Error preparing statement: ' . mysqli_error($conn));
+    }
+
+    // Bind parameter and execute prepared statement
+    mysqli_stmt_bind_param($stmtUser, "i", $id);
+    $resultUser = mysqli_stmt_execute($stmtUser);
+
+    // Close prepared statement
+    mysqli_stmt_close($stmtUser);
+
+    if ($resultRoleUser && $resultUser) {
+        // Redirect to success page or show success message
+        header("Location: ../../index.php?msg=Data deleted successfully");
+        exit();
+    } else {
+        echo "Failed: " . mysqli_error($conn);
+    }
 } else {
-    echo "Failed: " . mysqli_error($conn);
+    echo "User ID is not provided!";
 }
 ?>

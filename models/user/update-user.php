@@ -3,52 +3,96 @@ include "../../config/DB-conn.php";
 
 // Check if the form is submitted
 if (isset($_POST["submit"])) {
-    $user_id = $_GET["id"]; // Retrieve the user ID from the URL or form data
+    if (isset($_GET["id"])) {
+        $user_id = htmlspecialchars($_GET["id"]); // Sanitize the user ID from the URL or form data
 
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-    $role_id = $_POST['role'];
+        $username = htmlspecialchars($_POST['username']);
+        $email = htmlspecialchars($_POST['email']);
+        $password = $_POST['password'];
+        $confirm_password = $_POST['confirm_password'];
+        $role_id = $_POST['role'];
 
-    // Check if passwords match
-    if ($password !== $confirm_password) {
-        echo "Passwords do not match.";
-        exit(); // Stop execution if passwords don't match
-    }
+        // Check if passwords match
+        if ($password !== $confirm_password) {
+            echo "Passwords do not match.";
+            exit(); // Stop execution if passwords don't match
+        }
 
-    // Update user data in the 'user' table
-    $sqlUpdateUser = "UPDATE user SET username = '$username', email = '$email', Password = '$password' WHERE id = $user_id";
-    $resultUpdateUser = mysqli_query($conn, $sqlUpdateUser);
+        // Hash the password
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    if ($resultUpdateUser) {
-        // Update user role in the 'role_user' table
-        $sqlUpdateRoleUser = "UPDATE role_user SET role_id = $role_id WHERE user_id = $user_id";
-        $resultUpdateRoleUser = mysqli_query($conn, $sqlUpdateRoleUser);
+        // Prepare SQL statement to update user data using prepared statements
+        $sqlUpdateUser = "UPDATE user SET username = ?, email = ?, Password = ? WHERE id = ?";
+        $stmtUpdateUser = mysqli_prepare($conn, $sqlUpdateUser);
 
-        if ($resultUpdateRoleUser) {
-            // Close the database connection
+        // Check for errors in preparing the statement
+        if (!$stmtUpdateUser) {
+            die('Error preparing statement: ' . mysqli_error($conn));
+        }
 
-            // Redirect to success page or show success message
-            header("Location: ../../index.php?msg=User updated successfully");
-            exit();
+        // Bind parameters and execute prepared statement
+        mysqli_stmt_bind_param($stmtUpdateUser, "sssi", $username, $email, $hashed_password, $user_id);
+        $resultUpdateUser = mysqli_stmt_execute($stmtUpdateUser);
+
+        if ($resultUpdateUser) {
+            // Close prepared statement
+            mysqli_stmt_close($stmtUpdateUser);
+            
+            // Prepare SQL statement to update user role in the 'role_user' table using prepared statements
+            $sqlUpdateRoleUser = "UPDATE role_user SET role_id = ? WHERE user_id = ?";
+            $stmtUpdateRoleUser = mysqli_prepare($conn, $sqlUpdateRoleUser);
+
+            // Check for errors in preparing the statement
+            if (!$stmtUpdateRoleUser) {
+                die('Error preparing statement: ' . mysqli_error($conn));
+            }
+
+            // Bind parameters and execute prepared statement
+            mysqli_stmt_bind_param($stmtUpdateRoleUser, "ii", $role_id, $user_id);
+            $resultUpdateRoleUser = mysqli_stmt_execute($stmtUpdateRoleUser);
+
+            if ($resultUpdateRoleUser) {
+                // Close prepared statement
+                mysqli_stmt_close($stmtUpdateRoleUser);
+                
+                // Redirect to success page or show success message
+                header("Location: ../../index.php?msg=User updated successfully");
+                exit();
+            } else {
+                echo "Error updating user role: " . mysqli_error($conn);
+            }
         } else {
-            echo "Error updating user role: " . mysqli_error($conn);
+            echo "Error updating user data: " . mysqli_error($conn);
         }
     } else {
-        echo "Error updating user data: " . mysqli_error($conn);
+        echo "User ID is not provided!";
     }
 }
 
 // Fetch user details and populate the form for updating
-$user_id = $_GET["id"]; // Retrieve the user ID from the URL or form data
+if (isset($_GET["id"])) {
+    $user_id = htmlspecialchars($_GET["id"]); // Sanitize the user ID from the URL or form data
 
-$sqlFetchUser = "SELECT * FROM user WHERE id = $user_id";
-$resultFetchUser = mysqli_query($conn, $sqlFetchUser);
-$row = mysqli_fetch_assoc($resultFetchUser);
+    $sqlFetchUser = "SELECT * FROM user WHERE id = ?";
+    $stmtFetchUser = mysqli_prepare($conn, $sqlFetchUser);
 
-$sqlRoles = "SELECT * FROM role";
-$resultRoles = $conn->query($sqlRoles);
+    // Check for errors in preparing the statement
+    if (!$stmtFetchUser) {
+        die('Error preparing statement: ' . mysqli_error($conn));
+    }
+
+    // Bind parameter and execute prepared statement
+    mysqli_stmt_bind_param($stmtFetchUser, "i", $user_id);
+    mysqli_stmt_execute($stmtFetchUser);
+    $resultFetchUser = mysqli_stmt_get_result($stmtFetchUser);
+    $row = mysqli_fetch_assoc($resultFetchUser);
+
+    // Close prepared statement
+    mysqli_stmt_close($stmtFetchUser);
+
+    $sqlRoles = "SELECT * FROM role";
+    $resultRoles = $conn->query($sqlRoles);
+}
 ?>
 
 

@@ -2,19 +2,31 @@
 include "../../config/DB-conn.php";
 
 if (isset($_POST["submit"])) {
-    $project_name = $_POST['project_name'];
-    $description = $_POST['description'];
-    $start_date = $_POST['start_date'];
-    $deadline = $_POST['deadline'];
-    $status = $_POST['status'];
-    $user_id = $_POST['user_id'];
+    $project_name = htmlspecialchars($_POST['project_name']);
+    $description = htmlspecialchars($_POST['description']);
+    $start_date = htmlspecialchars($_POST['start_date']);
+    $deadline = htmlspecialchars($_POST['deadline']);
+    $status = htmlspecialchars($_POST['status']);
+    $user_id = htmlspecialchars($_POST['user_id']);
 
-    // Insert project data into the 'projects' table
+    // Prepare SQL statement to insert project data using prepared statements
     $sqlInsertProject = "INSERT INTO project (project_name, description, start_date, deadline, status, user_id)
-                        VALUES ('$project_name', '$description', '$start_date', '$deadline', '$status', '$user_id')";
-    $resultInsertProject = mysqli_query($conn, $sqlInsertProject);
+                        VALUES (?, ?, ?, ?, ?, ?)";
+    $stmtInsertProject = mysqli_prepare($conn, $sqlInsertProject);
+
+    // Check for errors in preparing the statement
+    if (!$stmtInsertProject) {
+        die('Error preparing statement: ' . mysqli_error($conn));
+    }
+
+    // Bind parameters and execute prepared statement
+    mysqli_stmt_bind_param($stmtInsertProject, "sssssi", $project_name, $description, $start_date, $deadline, $status, $user_id);
+    $resultInsertProject = mysqli_stmt_execute($stmtInsertProject);
 
     if ($resultInsertProject) {
+        // Close prepared statement
+        mysqli_stmt_close($stmtInsertProject);
+        
         // Close the database connection
         mysqli_close($conn);
 
@@ -29,7 +41,9 @@ if (isset($_POST["submit"])) {
 $sqlUsers = "SELECT id, username FROM user";
 $resultUsers = mysqli_query($conn, $sqlUsers);
 
+// Fetch users data for project assignment dropdown
 ?>
+
 
 
 
