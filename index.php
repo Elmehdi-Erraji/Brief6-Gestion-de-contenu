@@ -146,32 +146,29 @@
                     </div>
                 </div>
 
-                <div class="card">
+                <!-- <div class="card">
                     <div>
                     <div class="numbers">
                         <?php
-                        $sql = "SELECT COUNT(*) as teams_count FROM team";
+                        // $sql = "SELECT COUNT(*) as teams_count FROM team";
 
-                        // Execute the query
-                        $result = $conn->query($sql);
+                       
+                        // $result = $conn->query($sql);
 
-                        // Check if the query was successful
-                        if ($result) {
-                            // Fetch the result as an associative array
-                            $row = $result->fetch_assoc();
+                        
+                        // if ($result) {
+                           
+                        //     $row = $result->fetch_assoc();
 
-                            // Access the count value
-                            $orderCount = $row['teams_count'];
+                           
+                        //     $orderCount = $row['teams_count'];
 
-                            // // Output the count on the front end
-                            echo "$orderCount";
+                         
+                        //     echo "$orderCount";
 
-                            // Free the result set
-                            $result->free();
-                        } else {
-                            // Handle query error
-                            // echo "Error " ;
-                        }
+                          
+                        //     $result->free();
+                        // } 
 
                         ?>
                        </div>
@@ -181,7 +178,7 @@
                     <div class="iconBx">
                         
                     </div>
-                </div>
+                </div> -->
 
                 <div class="card">
                     <div>
